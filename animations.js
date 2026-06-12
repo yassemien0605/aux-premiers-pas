@@ -7,14 +7,14 @@ import {
 } from "https://cdn.jsdelivr.net/npm/motion@11/dist/motion.js";
 
 // ============================================================
-// UTILS
+// HELPERS
 // ============================================================
-const q  = (sel) => document.querySelector(sel);
-const qq = (sel) => [...document.querySelectorAll(sel)];
+const q  = (sel, root = document) => root.querySelector(sel);
+const qq = (sel, root = document) => [...root.querySelectorAll(sel)];
 const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
 // ============================================================
-// 1. HERO ENTRANCE — Spring cascade, like a child waking up
+// 1. HERO ENTRANCE — Spring cascade
 // ============================================================
 const heroEls = [
   q(".hero-logo"),
@@ -23,41 +23,42 @@ const heroEls = [
   q(".hero-actions"),
 ];
 
-// Set initial hidden state instantly
+// Set initial hidden state instantly via JS (no CSS dependency)
 heroEls.forEach((el) => {
   if (el) {
     el.style.opacity = "0";
-    el.style.transform = "translateY(30px)";
+    el.style.transform = "translateY(32px)";
   }
 });
 
-// Staggered spring entrance
-const springConfig = { stiffness: 120, damping: 20, mass: 1 };
-
+// Staggered spring entrance after a short delay
 heroEls.forEach((el, i) => {
   if (!el) return;
-  setTimeout(() => {
-    animate(
-      el,
-      { opacity: [0, 1], y: [30, 0] },
-      {
-        duration: 1.2,
-        delay: i * 0.18,
-        easing: spring(springConfig),
-      }
-    );
-  }, 100);
+  animate(
+    el,
+    { opacity: [0, 1], y: [32, 0] },
+    {
+      duration: 1.1,
+      delay: 0.15 + i * 0.18,
+      easing: spring({ stiffness: 110, damping: 20 }),
+    }
+  );
 });
 
 // ============================================================
-// 2. KEN BURNS — Slow, dreamy zoom on hero background
+// 2. KEN BURNS — Slow dreamy zoom on hero background
 // ============================================================
 const heroImage = q(".hero-image");
 if (heroImage) {
   animate(
     heroImage,
     { scale: [1, 1.07] },
-    { duration: 18, easing: "ease-in-out", repeat: Infinity, direction: "alternate" }
+    {
+      duration: 18,
+      easing: "ease-in-out",
+      repeat: Infinity,
+      direction: "alternate",
+    }
   );
 }
 
@@ -68,35 +69,72 @@ const header = q(".site-header");
 window.addEventListener(
   "scroll",
   () => {
-    header.classList.toggle("header-elevated", window.scrollY > 70);
+    if (header) header.classList.toggle("header-elevated", window.scrollY > 70);
   },
   { passive: true }
 );
 
 // ============================================================
-// 4. QUICK-INFO — Staggered counter reveal
+// 4. SCROLL PROGRESS BAR
+// ============================================================
+const progressBar = document.createElement("div");
+progressBar.className = "scroll-progress";
+document.body.appendChild(progressBar);
+
+scroll(({ y }) => {
+  progressBar.style.transform = `scaleX(${y.progress})`;
+});
+
+// ============================================================
+// 5. QUICK-INFO — Staggered bounce
 // ============================================================
 inView(
   ".quick-info",
-  ({ target }) => {
+  () => {
     animate(
       qq(".quick-info article"),
       { opacity: [0, 1], y: [36, 0], scale: [0.88, 1] },
       {
-        delay: stagger(0.1, { start: 0.1 }),
+        delay: stagger(0.1, { start: 0.05 }),
         easing: spring({ stiffness: 200, damping: 22 }),
       }
     );
   },
-  { amount: 0.3 }
+  { amount: 0.2 }
 );
 
 // ============================================================
-// 5. VALUE CARDS — Playful bounce with slight tilt
+// 6. INTRO SECTIONS — Fade + slide
+// ============================================================
+qq(".intro-section").forEach((section) => {
+  inView(
+    section,
+    () => {
+      const kicker = q(".section-kicker", section);
+      const gridCols = qq(".intro-grid > *", section);
+      if (kicker) {
+        animate(kicker, { opacity: [0, 1], x: [-16, 0] }, {
+          duration: 0.7, easing: [0.16, 1, 0.3, 1], delay: 0.05,
+        });
+      }
+      if (gridCols.length) {
+        animate(gridCols, { opacity: [0, 1], y: [40, 0] }, {
+          delay: stagger(0.14, { start: 0.2 }),
+          duration: 0.95,
+          easing: spring({ stiffness: 130, damping: 22 }),
+        });
+      }
+    },
+    { amount: 0.1 }
+  );
+});
+
+// ============================================================
+// 7. VALUE CARDS — Playful bounce with tilt
 // ============================================================
 inView(
   ".value-section",
-  ({ target }) => {
+  () => {
     animate(
       qq(".value-card"),
       { opacity: [0, 1], y: [60, 0], rotate: [4, 0], scale: [0.88, 1] },
@@ -106,15 +144,15 @@ inView(
       }
     );
   },
-  { amount: 0.2 }
+  { amount: 0.15 }
 );
 
 // ============================================================
-// 6. TIMELINE — Sequence like footsteps
+// 8. TIMELINE — Footsteps from the left
 // ============================================================
 inView(
   ".timeline",
-  ({ target }) => {
+  () => {
     animate(
       qq(".timeline article"),
       { opacity: [0, 1], x: [-50, 0] },
@@ -125,15 +163,15 @@ inView(
       }
     );
   },
-  { amount: 0.15 }
+  { amount: 0.1 }
 );
 
 // ============================================================
-// 7. ROOM CARDS — Gentle pop on scroll
+// 9. ROOM GRID — Gentle pop
 // ============================================================
 inView(
   ".room-grid",
-  ({ target }) => {
+  () => {
     animate(
       qq(".room-grid article"),
       { opacity: [0, 1], y: [50, 0], scale: [0.9, 1] },
@@ -143,15 +181,15 @@ inView(
       }
     );
   },
-  { amount: 0.15 }
+  { amount: 0.1 }
 );
 
 // ============================================================
-// 8. PRICING CARDS — Rise with spring
+// 10. PRICING — Spring rise
 // ============================================================
 inView(
-  ".pricing-grid",
-  ({ target }) => {
+  ".pricing-section",
+  () => {
     animate(
       qq(".price-card"),
       { opacity: [0, 1], y: [60, 0], scale: [0.84, 1] },
@@ -161,44 +199,59 @@ inView(
       }
     );
   },
-  { amount: 0.25 }
+  { amount: 0.1 }
 );
 
 // ============================================================
-// 9. CONTACT — Slide from sides
+// 11. CONTACT — Slide from sides
 // ============================================================
 inView(
   ".contact-section",
-  ({ target }) => {
+  () => {
     const panel = q(".contact-panel");
     const form  = q(".preinscription-form");
-    if (panel) animate(panel, { opacity: [0, 1], x: [-50, 0] }, { duration: 1, easing: spring({ stiffness: 130, damping: 20 }), delay: 0.1 });
-    if (form)  animate(form,  { opacity: [0, 1], x: [50, 0] },  { duration: 1, easing: spring({ stiffness: 130, damping: 20 }), delay: 0.25 });
-  },
-  { amount: 0.15 }
-);
-
-// ============================================================
-// 10. FOOTER — Soft reveal
-// ============================================================
-inView(
-  ".site-footer",
-  ({ target }) => {
-    animate(
-      [q(".footer-brand"), q(".footer-links"), q(".footer-contact")].filter(Boolean),
-      { opacity: [0, 1], y: [30, 0] },
-      {
-        delay: stagger(0.15, { start: 0.1 }),
-        duration: 0.9,
-        easing: [0.16, 1, 0.3, 1],
-      }
-    );
+    if (panel) {
+      animate(panel, { opacity: [0, 1], x: [-50, 0] }, {
+        duration: 1,
+        easing: spring({ stiffness: 130, damping: 20 }),
+        delay: 0.1,
+      });
+    }
+    if (form) {
+      animate(form, { opacity: [0, 1], x: [50, 0] }, {
+        duration: 1,
+        easing: spring({ stiffness: 130, damping: 20 }),
+        delay: 0.25,
+      });
+    }
   },
   { amount: 0.1 }
 );
 
 // ============================================================
-// 11. CURSOR BLOB — Soft emotional presence (desktop only)
+// 12. FOOTER — Soft staggered reveal
+// ============================================================
+inView(
+  ".site-footer",
+  () => {
+    const cols = [
+      q(".footer-brand"),
+      q(".footer-links"),
+      q(".footer-contact"),
+    ].filter(Boolean);
+    if (cols.length) {
+      animate(cols, { opacity: [0, 1], y: [30, 0] }, {
+        delay: stagger(0.15, { start: 0.1 }),
+        duration: 0.9,
+        easing: [0.16, 1, 0.3, 1],
+      });
+    }
+  },
+  { amount: 0.05 }
+);
+
+// ============================================================
+// 13. CURSOR BLOB — Soft emotional presence (desktop only)
 // ============================================================
 if (!isMobile) {
   const blob = document.createElement("div");
@@ -238,7 +291,7 @@ if (!isMobile) {
     });
   });
 
-  // Smooth RAf follow loop
+  // Smooth RAF follow loop
   function blobLoop() {
     bx += (mx - bx) * 0.09;
     by += (my - by) * 0.09;
@@ -250,7 +303,7 @@ if (!isMobile) {
 }
 
 // ============================================================
-// 12. FLOATING PARTICLES — Hero warmth & playfulness
+// 14. FLOATING PARTICLES — Hero warmth
 // ============================================================
 const heroSection = q(".hero");
 if (heroSection) {
@@ -258,16 +311,17 @@ if (heroSection) {
   wrap.className = "hero-particles";
   heroSection.appendChild(wrap);
 
+  const colors = [
+    "var(--teal)",
+    "var(--mint)",
+    "var(--gold)",
+    "rgba(0,167,168,0.6)",
+  ];
+
   for (let i = 0; i < 16; i++) {
     const p = document.createElement("div");
     p.className = "particle";
     const size = Math.random() * 8 + 3;
-    const colors = [
-      "var(--teal)",
-      "var(--mint)",
-      "var(--gold)",
-      "rgba(0,167,168,0.6)",
-    ];
     p.style.cssText = `
       width: ${size}px;
       height: ${size}px;
@@ -275,45 +329,9 @@ if (heroSection) {
       bottom: ${Math.random() * 50 + 5}%;
       animation-delay: ${Math.random() * 10}s;
       animation-duration: ${Math.random() * 12 + 10}s;
-      opacity: ${Math.random() * 0.3 + 0.05};
+      opacity: ${Math.random() * 0.28 + 0.05};
       background: ${colors[Math.floor(Math.random() * colors.length)]};
     `;
     wrap.appendChild(p);
   }
-}
-
-// ============================================================
-// 13. SCROLL PROGRESS BAR — Reading feedback
-// ============================================================
-const progressBar = document.createElement("div");
-progressBar.className = "scroll-progress";
-document.body.appendChild(progressBar);
-
-scroll(({ y }) => {
-  progressBar.style.transform = `scaleX(${y.progress})`;
-});
-
-// ============================================================
-// 14. INTRO SECTIONS — Gentle fade slide
-// ============================================================
-qq(".intro-section").forEach((section, i) => {
-  inView(
-    section,
-    () => {
-      animate(section.querySelector(".section-kicker"), { opacity: [0, 1], x: [-16, 0] }, {
-        duration: 0.6, easing: [0.16, 1, 0.3, 1], delay: 0.05,
-      });
-      animate(qq(".intro-grid > *", section), { opacity: [0, 1], y: [40, 0] }, {
-        delay: stagger(0.14, { start: 0.15 }),
-        duration: 0.95,
-        easing: spring({ stiffness: 130, damping: 22 }),
-      });
-    },
-    { amount: 0.1 }
-  );
-});
-
-// Helper — querySelectorAll scoped to a parent
-function qq(sel, parent = document) {
-  return [...parent.querySelectorAll(sel)];
 }

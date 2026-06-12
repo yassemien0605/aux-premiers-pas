@@ -1060,30 +1060,23 @@ h3 {
 
 /* --- Room grid initial state --- */
 .room-grid article {
-  opacity: 0;
 }
 
 /* --- Price cards initial state --- */
 .price-card {
-  opacity: 0;
 }
 
 /* --- Contact initial state --- */
 .contact-panel,
 .preinscription-form {
-  opacity: 0;
 }
 
 /* --- Footer initial state --- */
 .footer-brand,
 .footer-links,
 .footer-contact {
-  opacity: 0;
 }
 
 /* --- Timeline articles initial state --- */
 .timeline article {
-  opacity: 0;
 }
-
-
