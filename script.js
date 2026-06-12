@@ -33,3 +33,23 @@ form.addEventListener("submit", (event) => {
   formMessage.textContent = "Merci, votre demande a bien ete prise en compte.";
   form.reset();
 });
+
+// Scroll reveal observer
+const observerOptions = {
+  root: null,
+  rootMargin: '0px',
+  threshold: 0.12
+};
+
+const observer = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in-view');
+      observer.unobserve(entry.target);
+    }
+  });
+}, observerOptions);
+
+document.querySelectorAll('.reveal, .reveal-group').forEach(element => {
+  observer.observe(element);
+});
