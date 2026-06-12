@@ -954,3 +954,136 @@ h3 {
 .reveal-group.in-view > *:nth-child(4) { transition-delay: 0.34s; }
 .reveal-group.in-view > *:nth-child(5) { transition-delay: 0.42s; }
 
+/* ==========================================================================
+   MOTION DEV — Emotional animation support
+   ========================================================================== */
+
+/* --- Hero image Ken Burns support --- */
+.hero-image {
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* --- Header elevated on scroll (glassmorphism boost) --- */
+.site-header {
+  transition: box-shadow 0.4s ease, background 0.4s ease;
+}
+
+.site-header.header-elevated {
+  background: rgba(255, 250, 235, 0.96) !important;
+  box-shadow: 0 4px 32px rgba(23, 51, 58, 0.1);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* --- Scroll progress bar --- */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--teal), var(--mint), var(--gold));
+  transform-origin: left center;
+  transform: scaleX(0);
+  z-index: 9998;
+  pointer-events: none;
+  border-radius: 0 2px 2px 0;
+}
+
+/* --- Cursor blob --- */
+.cursor-blob {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 167, 168, 0.3) 0%,
+    rgba(139, 201, 156, 0.12) 50%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9997;
+  opacity: 0;
+  mix-blend-mode: multiply;
+  will-change: left, top;
+}
+
+/* --- Floating particles --- */
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  animation: floatParticle linear infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes floatParticle {
+  0% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-45vh) translateX(18px) scale(0.8);
+  }
+  90% {
+    opacity: 0.15;
+  }
+  100% {
+    transform: translateY(-95vh) translateX(-10px) scale(0.3);
+    opacity: 0;
+  }
+}
+
+/* --- Quick info initial hidden state (Motion One will reveal) --- */
+.quick-info article {
+  opacity: 0;
+}
+
+/* --- Value cards initial state --- */
+.value-card {
+  opacity: 0;
+}
+
+/* --- Room grid initial state --- */
+.room-grid article {
+  opacity: 0;
+}
+
+/* --- Price cards initial state --- */
+.price-card {
+  opacity: 0;
+}
+
+/* --- Contact initial state --- */
+.contact-panel,
+.preinscription-form {
+  opacity: 0;
+}
+
+/* --- Footer initial state --- */
+.footer-brand,
+.footer-links,
+.footer-contact {
+  opacity: 0;
+}
+
+/* --- Timeline articles initial state --- */
+.timeline article {
+  opacity: 0;
+}
+
+
