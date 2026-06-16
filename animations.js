@@ -52,22 +52,6 @@ heroEls.forEach((el) => {
 
 revealElements(heroEls, { delay: 90, stagger: 110, duration: 860 });
 
-const heroImage = q(".hero-image");
-if (heroImage && !reduceMotion) {
-  heroImage.animate(
-    [
-      { transform: "scale(1)" },
-      { transform: "scale(1.035)" },
-    ],
-    {
-      duration: 22000,
-      direction: "alternate",
-      easing: "ease-in-out",
-      iterations: Infinity,
-    }
-  );
-}
-
 const header = q(".site-header");
 window.addEventListener(
   "scroll",
