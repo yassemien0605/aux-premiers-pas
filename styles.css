@@ -807,6 +807,11 @@ h3 {
   padding: 28px;
 }
 
+.price-card.is-selected {
+  border-color: var(--teal);
+  box-shadow: 0 24px 60px rgba(0, 167, 168, 0.17);
+}
+
 .price-card strong {
   display: block;
   color: var(--ink);
@@ -824,6 +829,36 @@ h3 {
 .price-card.featured strong,
 .price-card.featured p {
   color: #ffffff;
+}
+
+.offer-button {
+  min-height: 46px;
+  border: 1px solid rgba(20, 39, 44, 0.14);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--ink);
+  font-weight: 900;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.offer-button:hover,
+.offer-button.is-selected {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.price-card.featured .offer-button {
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.price-card.featured .offer-button:hover,
+.price-card.featured .offer-button.is-selected {
+  border-color: #ffffff;
+  background: #ffffff;
+  color: var(--teal-dark);
 }
 
 .contact-section {
@@ -888,6 +923,56 @@ h3 {
   padding: 12px 14px;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.selected-offer-input {
+  font-weight: 800;
+}
+
+.payment-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid rgba(0, 167, 168, 0.18);
+  border-radius: 8px;
+  background: rgba(0, 167, 168, 0.06);
+}
+
+.payment-options[hidden] {
+  display: none;
+}
+
+.payment-options legend {
+  grid-column: 1 / -1;
+  padding: 0 8px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.payment-options label {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.payment-options input {
+  width: 18px;
+  min-height: 18px;
+  accent-color: var(--teal);
+}
+
+.payment-options span {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 800;
 }
 
 .preinscription-form textarea {
@@ -1304,6 +1389,10 @@ textarea:focus-visible {
   .hero-actions {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .payment-options {
+    grid-template-columns: 1fr;
   }
 
   .primary-link,

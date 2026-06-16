@@ -3,6 +3,10 @@ const nav = document.querySelector(".main-nav");
 const navLinks = document.querySelectorAll(".main-nav a");
 const form = document.querySelector(".preinscription-form");
 const formMessage = document.querySelector(".form-message");
+const offerButtons = document.querySelectorAll(".offer-button");
+const selectedOfferInput = document.querySelector(".selected-offer-input");
+const paymentOptions = document.querySelector(".payment-options");
+const paymentInputs = document.querySelectorAll('input[name="payment"]');
 const soundToggle = document.querySelector(".sound-toggle");
 const soundToggleLabel = document.querySelector(".sound-toggle-label");
 const muteToggle = document.querySelector(".mute-toggle");
@@ -80,6 +84,34 @@ form?.addEventListener("submit", (event) => {
   event.preventDefault();
   formMessage.textContent = "Merci, votre demande a bien été prise en compte.";
   form.reset();
+  offerButtons.forEach((button) => {
+    button.classList.remove("is-selected");
+    button.closest(".price-card")?.classList.remove("is-selected");
+  });
+  if (paymentOptions) paymentOptions.hidden = true;
+  paymentInputs.forEach((input) => {
+    input.required = false;
+  });
+});
+
+offerButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const selectedOffer = button.dataset.offer || "";
+
+    offerButtons.forEach((item) => {
+      const isSelected = item === button;
+      item.classList.toggle("is-selected", isSelected);
+      item.closest(".price-card")?.classList.toggle("is-selected", isSelected);
+    });
+
+    if (selectedOfferInput) selectedOfferInput.value = selectedOffer;
+    if (paymentOptions) paymentOptions.hidden = false;
+    paymentInputs.forEach((input) => {
+      input.required = true;
+    });
+
+    form?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 });
 
 function clamp(value, min, max) {

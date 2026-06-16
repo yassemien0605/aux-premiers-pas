@@ -255,16 +255,19 @@
             <span>Demi-journée</span>
             <strong>16 €</strong>
             <p>Matin ou après-midi, collation incluse.</p>
+            <button class="offer-button" type="button" data-offer="Demi-journée - 16 €">Choisir</button>
           </article>
           <article class="price-card featured">
             <span>Journée</span>
             <strong>20 €</strong>
             <p>Accueil complet, repas, sieste et transmissions.</p>
+            <button class="offer-button" type="button" data-offer="Journée - 20 €">Choisir</button>
           </article>
           <article class="price-card">
             <span>Semaine</span>
             <strong>55 €</strong>
             <p>Forfait régulier du lundi au vendredi.</p>
+            <button class="offer-button" type="button" data-offer="Semaine - 55 €">Choisir</button>
           </article>
         </div>
       </section>
@@ -318,6 +321,29 @@
               <option>Accueil ponctuel ou horaires atypiques</option>
             </select>
           </label>
+          <label>
+            Offre choisie
+            <input class="selected-offer-input" type="text" name="offer" placeholder="Choisir une offre dans les tarifs" readonly required />
+          </label>
+          <fieldset class="payment-options" hidden>
+            <legend>Moyen de paiement électronique</legend>
+            <label>
+              <input type="radio" name="payment" value="Orange Money" />
+              <span>Orange Money</span>
+            </label>
+            <label>
+              <input type="radio" name="payment" value="MTN Mobile Money" />
+              <span>MTN Mobile Money</span>
+            </label>
+            <label>
+              <input type="radio" name="payment" value="Wave" />
+              <span>Wave</span>
+            </label>
+            <label>
+              <input type="radio" name="payment" value="Carte bancaire" />
+              <span>Carte bancaire</span>
+            </label>
+          </fieldset>
           <label>
             Besoin principal
             <textarea name="message" rows="4" placeholder="Jours souhaités, date d'entrée, rythme de sommeil, besoins particuliers..."></textarea>
