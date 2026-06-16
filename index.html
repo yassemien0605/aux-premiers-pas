@@ -3,11 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aux Premiers Pas | Creche</title>
+    <title>Aux Premiers Pas | Crèche à Abidjan</title>
     <meta
       name="description"
-      content="Site professionnel de la creche Aux Premiers Pas : accueil, projet pedagogique, horaires, tarifs et pre-inscription."
+      content="Crèche Aux Premiers Pas à Abidjan : accueil 24h/24 et 7j/7, projet pédagogique bienveillant, espaces d'éveil, tarifs et pré-inscription."
     />
+    <meta name="theme-color" content="#fff7e6" />
+    <meta property="og:title" content="Aux Premiers Pas | Crèche à Abidjan" />
+    <meta
+      property="og:description"
+      content="Un accueil chaleureux, sécurisé et attentif pour les enfants de 12 semaines à 4 ans."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/creche-hero.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -33,11 +41,27 @@
         <a href="#a-propos">À propos</a>
         <a href="#projet">Projet</a>
         <a href="#accueil-enfant">Accueil</a>
+        <a href="#familles">Familles</a>
         <a href="#tarifs">Tarifs</a>
         <a href="#contact">Contact</a>
       </nav>
 
-      <a class="header-cta" href="#preinscription">Pre-inscription</a>
+      <div class="audio-controls" aria-label="Ambiance sonore">
+        <button class="sound-toggle" type="button" aria-pressed="false" aria-label="Activer l'ambiance sonore">
+          <span class="sound-toggle-icon" aria-hidden="true"></span>
+          <span class="sr-only sound-toggle-label">Activer l'ambiance sonore</span>
+        </button>
+        <button class="mute-toggle" type="button" aria-pressed="false" aria-label="Couper le son">
+          <span class="mute-toggle-icon" aria-hidden="true"></span>
+          <span class="sr-only mute-toggle-label">Couper le son</span>
+        </button>
+        <label class="volume-control">
+          <span class="sr-only">Volume de l'ambiance sonore</span>
+          <input class="volume-slider" type="range" min="0" max="100" value="42" />
+        </label>
+      </div>
+
+      <a class="header-cta" href="#preinscription">Pré-inscription</a>
     </header>
 
     <main id="accueil">
@@ -63,7 +87,7 @@
 
       <section class="quick-info" aria-label="Informations principales">
         <article>
-          <span>Age</span>
+          <span>Âge</span>
           <strong>12 semaines - 4 ans</strong>
         </article>
         <article>
@@ -172,28 +196,53 @@
       <section class="rooms-section">
         <div class="section-heading reveal">
           <p class="eyebrow">Espaces</p>
-          <h2>Des lieux penses pour les tout-petits.</h2>
+          <h2>Des lieux pensés pour les tout-petits.</h2>
         </div>
         <div class="room-grid reveal-group">
           <article>
             <div class="room-icon mint"></div>
-            <h3>Salle d'eveil</h3>
-            <p>Jeux libres, coins lecture, materiel sensoriel et modules de motricite.</p>
+            <h3>Salle d'éveil</h3>
+            <p>Jeux libres, coins lecture, matériel sensoriel et modules de motricité.</p>
           </article>
           <article>
             <div class="room-icon gold"></div>
             <h3>Espace repos</h3>
-            <p>Ambiance calme, couchage adapte et respect des besoins de sommeil.</p>
+            <p>Ambiance calme, couchage adapté et respect des besoins de sommeil.</p>
           </article>
           <article>
             <div class="room-icon teal"></div>
             <h3>Coin repas</h3>
-            <p>Repas encadres, apprentissage des gestes simples et convivialite.</p>
+            <p>Repas encadrés, apprentissage des gestes simples et convivialité.</p>
           </article>
           <article>
             <div class="room-icon soft"></div>
-            <h3>Exterieur</h3>
-            <p>Sorties et jeux dehors lorsque la meteo le permet.</p>
+            <h3>Extérieur</h3>
+            <p>Sorties et jeux dehors lorsque la météo le permet.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="family-section" id="familles">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Familles</p>
+          <h2>Des repères clairs dès le premier rendez-vous.</h2>
+        </div>
+        <div class="family-grid reveal-group">
+          <article>
+            <h3>Adaptation progressive</h3>
+            <p>Un temps d'intégration est organisé avec les parents pour installer la confiance avant l'accueil régulier.</p>
+          </article>
+          <article>
+            <h3>Communication quotidienne</h3>
+            <p>Les repas, siestes, soins, activités et moments importants sont transmis avec simplicité à chaque départ.</p>
+          </article>
+          <article>
+            <h3>Sécurité et hygiène</h3>
+            <p>Les espaces sont entretenus avec rigueur et l'équipe veille aux gestes d'hygiène, aux allergies et aux habitudes de chaque enfant.</p>
+          </article>
+          <article>
+            <h3>Dossier d'inscription</h3>
+            <p>Après la demande de place, la famille reçoit la liste des pièces utiles : carnet de santé, contacts d'urgence et informations de rythme.</p>
           </article>
         </div>
       </section>
@@ -231,7 +280,7 @@
           <h2>Parlons de votre besoin d'accueil.</h2>
           <div class="contact-list">
             <p>
-              <strong>Telephone</strong>
+              <strong>Téléphone</strong>
               <span>
                 (+225) 05 75 00 77 77<br />
                 (+225) 07 07 08 90 04 (Whatsapp)<br />
@@ -239,12 +288,12 @@
               </span>
             </p>
             <p><strong>Email</strong><span>delphineloukouk@gmail.com</span></p>
-            <p><strong>Adresse</strong><span>2 plateaux vallons, Abidjan</span></p>
+            <p><strong>Adresse</strong><span>2 Plateaux Sainte-Cécile, Cocody, Abidjan</span></p>
           </div>
         </div>
 
         <form class="preinscription-form" id="preinscription">
-          <p class="eyebrow">Pre-inscription</p>
+          <p class="eyebrow">Pré-inscription</p>
           <h2>Demande de place</h2>
           <label>
             Nom du parent
@@ -255,18 +304,28 @@
             <input type="email" name="email" placeholder="vous@email.fr" required />
           </label>
           <label>
-            Age de l'enfant
+            Âge de l'enfant
             <select name="age" required>
-              <option value="">Selectionner</option>
+              <option value="">Sélectionner</option>
               <option>Moins de 1 an</option>
-              <option>1 a 2 ans</option>
-              <option>2 a 3 ans</option>
+              <option>1 à 2 ans</option>
+              <option>2 à 3 ans</option>
               <option>3 ans et plus</option>
             </select>
           </label>
           <label>
+            Rythme souhaité
+            <select name="schedule" required>
+              <option value="">Sélectionner</option>
+              <option>Temps plein</option>
+              <option>Quelques jours par semaine</option>
+              <option>Demi-journées</option>
+              <option>Accueil ponctuel ou horaires atypiques</option>
+            </select>
+          </label>
+          <label>
             Besoin principal
-            <textarea name="message" rows="4" placeholder="Jours souhaites, date d'entree, rythme..."></textarea>
+            <textarea name="message" rows="4" placeholder="Jours souhaités, date d'entrée, rythme de sommeil, besoins particuliers..."></textarea>
           </label>
           <button class="primary-button" type="submit">Envoyer la demande</button>
           <p class="form-message" aria-live="polite"></p>
@@ -287,6 +346,7 @@
           <a href="#a-propos">À propos</a>
           <a href="#projet">Notre approche</a>
           <a href="#accueil-enfant">Services</a>
+          <a href="#familles">Familles</a>
           <a href="#preinscription">Inscription</a>
           <a href="#contact">Contact</a>
         </div>

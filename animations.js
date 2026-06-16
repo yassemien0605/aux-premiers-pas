@@ -1,70 +1,73 @@
-import {
-  animate,
-  inView,
-  stagger,
-  spring,
-  scroll
-} from "https://cdn.jsdelivr.net/npm/motion@11/dist/motion.js";
-
-// ============================================================
-// HELPERS
-// ============================================================
-const q  = (sel, root = document) => root.querySelector(sel);
+const q = (sel, root = document) => root.querySelector(sel);
 const qq = (sel, root = document) => [...root.querySelectorAll(sel)];
 const isMobile = window.matchMedia("(max-width: 768px)").matches;
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// ============================================================
-// 1. HERO ENTRANCE — Spring cascade
-// ============================================================
+const ease = "cubic-bezier(0.16, 1, 0.3, 1)";
+
+function revealElements(elements, options = {}) {
+  if (reduceMotion) {
+    elements.forEach((el) => {
+      el.style.opacity = "1";
+      el.style.transform = "none";
+    });
+    return;
+  }
+
+  const {
+    delay = 0,
+    stagger = 80,
+    duration = 760,
+    from = "translate3d(0, 24px, 0)",
+  } = options;
+
+  elements.forEach((el, index) => {
+    if (!el) return;
+    el.animate(
+      [
+        { opacity: 0, transform: from },
+        { opacity: 1, transform: "translate3d(0, 0, 0) scale(1)" },
+      ],
+      {
+        duration,
+        delay: delay + index * stagger,
+        easing: ease,
+        fill: "forwards",
+      }
+    );
+  });
+}
+
 const heroEls = [
   q(".hero-logo"),
   q("#hero-title"),
   q(".hero-copy"),
   q(".hero-actions"),
-];
+].filter(Boolean);
 
-// Set initial hidden state instantly via JS (no CSS dependency)
 heroEls.forEach((el) => {
-  if (el) {
-    el.style.opacity = "0";
-    el.style.transform = "translateY(32px)";
-  }
+  el.style.opacity = "0";
+  el.style.transform = "translate3d(0, 24px, 0)";
 });
 
-// Staggered spring entrance after a short delay
-heroEls.forEach((el, i) => {
-  if (!el) return;
-  animate(
-    el,
-    { opacity: [0, 1], y: [32, 0] },
-    {
-      duration: 1.1,
-      delay: 0.15 + i * 0.18,
-      easing: spring({ stiffness: 110, damping: 20 }),
-    }
-  );
-});
+revealElements(heroEls, { delay: 90, stagger: 110, duration: 860 });
 
-// ============================================================
-// 2. KEN BURNS — Slow dreamy zoom on hero background
-// ============================================================
 const heroImage = q(".hero-image");
-if (heroImage) {
-  animate(
-    heroImage,
-    { scale: [1, 1.07] },
+if (heroImage && !reduceMotion) {
+  heroImage.animate(
+    [
+      { transform: "scale(1)" },
+      { transform: "scale(1.035)" },
+    ],
     {
-      duration: 18,
-      easing: "ease-in-out",
-      repeat: Infinity,
+      duration: 22000,
       direction: "alternate",
+      easing: "ease-in-out",
+      iterations: Infinity,
     }
   );
 }
 
-// ============================================================
-// 3. HEADER — Frosted glass on scroll
-// ============================================================
 const header = q(".site-header");
 window.addEventListener(
   "scroll",
@@ -74,264 +77,203 @@ window.addEventListener(
   { passive: true }
 );
 
-// ============================================================
-// 4. SCROLL PROGRESS BAR
-// ============================================================
 const progressBar = document.createElement("div");
 progressBar.className = "scroll-progress";
 document.body.appendChild(progressBar);
 
-scroll(({ y }) => {
-  progressBar.style.transform = `scaleX(${y.progress})`;
-});
+window.addEventListener(
+  "scroll",
+  () => {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+    progressBar.style.transform = `scaleX(${Math.max(0, Math.min(1, progress))})`;
+  },
+  { passive: true }
+);
 
-// ============================================================
-// 5. QUICK-INFO — Staggered bounce
-// ============================================================
-inView(
+const animated = new WeakSet();
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting || animated.has(entry.target)) return;
+      animated.add(entry.target);
+
+      if (entry.target.matches(".quick-info")) {
+        revealElements(qq(".quick-info article"), {
+          from: "translate3d(0, 22px, 0) scale(0.98)",
+          stagger: 80,
+          duration: 700,
+        });
+      }
+
+      if (entry.target.matches(".intro-section")) {
+        revealElements([q(".section-kicker", entry.target)], {
+          from: "translate3d(-16px, 0, 0)",
+          duration: 680,
+        });
+        revealElements(qq(".intro-grid > *", entry.target), {
+          delay: 140,
+          stagger: 110,
+          from: "translate3d(0, 28px, 0)",
+          duration: 820,
+        });
+      }
+
+      if (entry.target.matches(".value-section")) {
+        revealElements(qq(".value-card"), {
+          from: "translate3d(0, 28px, 0) scale(0.98)",
+          stagger: 100,
+          duration: 780,
+        });
+      }
+
+      if (entry.target.matches(".timeline")) {
+        revealElements(qq(".timeline article"), {
+          from: "translate3d(-24px, 0, 0)",
+          stagger: 120,
+          duration: 780,
+        });
+      }
+
+      if (entry.target.matches(".room-grid")) {
+        revealElements(qq(".room-grid article"), {
+          from: "translate3d(0, 26px, 0) scale(0.98)",
+          stagger: 80,
+          duration: 760,
+        });
+      }
+
+      if (entry.target.matches(".family-grid")) {
+        revealElements(qq(".family-grid article"), {
+          from: "translate3d(0, 26px, 0) scale(0.98)",
+          stagger: 85,
+          duration: 760,
+        });
+      }
+
+      if (entry.target.matches(".pricing-section")) {
+        revealElements(qq(".price-card"), {
+          from: "translate3d(0, 28px, 0) scale(0.98)",
+          stagger: 100,
+          duration: 780,
+        });
+      }
+
+      if (entry.target.matches(".contact-section")) {
+        revealElements([q(".contact-panel")], {
+          from: "translate3d(-24px, 0, 0)",
+          delay: 80,
+          duration: 820,
+        });
+        revealElements([q(".preinscription-form")], {
+          from: "translate3d(24px, 0, 0)",
+          delay: 160,
+          duration: 820,
+        });
+      }
+
+      if (entry.target.matches(".site-footer")) {
+        revealElements(
+          [q(".footer-brand"), q(".footer-links"), q(".footer-contact")].filter(Boolean),
+          { from: "translate3d(0, 22px, 0)", stagger: 100, duration: 760 }
+        );
+      }
+    });
+  },
+  { threshold: 0.12 }
+);
+
+[
   ".quick-info",
-  () => {
-    animate(
-      qq(".quick-info article"),
-      { opacity: [0, 1], y: [36, 0], scale: [0.88, 1] },
-      {
-        delay: stagger(0.1, { start: 0.05 }),
-        easing: spring({ stiffness: 200, damping: 22 }),
-      }
-    );
-  },
-  { amount: 0.2 }
-);
-
-// ============================================================
-// 6. INTRO SECTIONS — Fade + slide
-// ============================================================
-qq(".intro-section").forEach((section) => {
-  inView(
-    section,
-    () => {
-      const kicker = q(".section-kicker", section);
-      const gridCols = qq(".intro-grid > *", section);
-      if (kicker) {
-        animate(kicker, { opacity: [0, 1], x: [-16, 0] }, {
-          duration: 0.7, easing: [0.16, 1, 0.3, 1], delay: 0.05,
-        });
-      }
-      if (gridCols.length) {
-        animate(gridCols, { opacity: [0, 1], y: [40, 0] }, {
-          delay: stagger(0.14, { start: 0.2 }),
-          duration: 0.95,
-          easing: spring({ stiffness: 130, damping: 22 }),
-        });
-      }
-    },
-    { amount: 0.1 }
-  );
-});
-
-// ============================================================
-// 7. VALUE CARDS — Playful bounce with tilt
-// ============================================================
-inView(
+  ".intro-section",
   ".value-section",
-  () => {
-    animate(
-      qq(".value-card"),
-      { opacity: [0, 1], y: [60, 0], rotate: [4, 0], scale: [0.88, 1] },
-      {
-        delay: stagger(0.14),
-        easing: spring({ stiffness: 160, damping: 18 }),
-      }
-    );
-  },
-  { amount: 0.15 }
-);
-
-// ============================================================
-// 8. TIMELINE — Footsteps from the left
-// ============================================================
-inView(
   ".timeline",
-  () => {
-    animate(
-      qq(".timeline article"),
-      { opacity: [0, 1], x: [-50, 0] },
-      {
-        delay: stagger(0.2, { start: 0.1 }),
-        duration: 0.9,
-        easing: spring({ stiffness: 140, damping: 20 }),
-      }
-    );
-  },
-  { amount: 0.1 }
-);
-
-// ============================================================
-// 9. ROOM GRID — Gentle pop
-// ============================================================
-inView(
   ".room-grid",
-  () => {
-    animate(
-      qq(".room-grid article"),
-      { opacity: [0, 1], y: [50, 0], scale: [0.9, 1] },
-      {
-        delay: stagger(0.1),
-        easing: spring({ stiffness: 180, damping: 22 }),
-      }
-    );
-  },
-  { amount: 0.1 }
-);
-
-// ============================================================
-// 10. PRICING — Spring rise
-// ============================================================
-inView(
+  ".family-grid",
   ".pricing-section",
-  () => {
-    animate(
-      qq(".price-card"),
-      { opacity: [0, 1], y: [60, 0], scale: [0.84, 1] },
-      {
-        delay: stagger(0.16, { start: 0.1 }),
-        easing: spring({ stiffness: 180, damping: 20 }),
-      }
-    );
-  },
-  { amount: 0.1 }
-);
-
-// ============================================================
-// 11. CONTACT — Slide from sides
-// ============================================================
-inView(
   ".contact-section",
-  () => {
-    const panel = q(".contact-panel");
-    const form  = q(".preinscription-form");
-    if (panel) {
-      animate(panel, { opacity: [0, 1], x: [-50, 0] }, {
-        duration: 1,
-        easing: spring({ stiffness: 130, damping: 20 }),
-        delay: 0.1,
-      });
-    }
-    if (form) {
-      animate(form, { opacity: [0, 1], x: [50, 0] }, {
-        duration: 1,
-        easing: spring({ stiffness: 130, damping: 20 }),
-        delay: 0.25,
-      });
-    }
-  },
-  { amount: 0.1 }
-);
-
-// ============================================================
-// 12. FOOTER — Soft staggered reveal
-// ============================================================
-inView(
   ".site-footer",
-  () => {
-    const cols = [
-      q(".footer-brand"),
-      q(".footer-links"),
-      q(".footer-contact"),
-    ].filter(Boolean);
-    if (cols.length) {
-      animate(cols, { opacity: [0, 1], y: [30, 0] }, {
-        delay: stagger(0.15, { start: 0.1 }),
-        duration: 0.9,
-        easing: [0.16, 1, 0.3, 1],
-      });
-    }
-  },
-  { amount: 0.05 }
-);
+].forEach((selector) => qq(selector).forEach((el) => observer.observe(el)));
 
-// ============================================================
-// 13. CURSOR BLOB — Soft emotional presence (desktop only)
-// ============================================================
-if (!isMobile) {
+if (!isMobile && !reduceMotion) {
   const blob = document.createElement("div");
+  const dot = document.createElement("div");
   blob.className = "cursor-blob";
-  document.body.appendChild(blob);
+  dot.className = "cursor-dot";
+  document.body.append(blob, dot);
 
-  let bx = -200, by = -200, mx = -200, my = -200;
+  let bx = -200;
+  let by = -200;
+  let mx = -200;
+  let my = -200;
   let visible = false;
+  let hover = false;
 
-  document.addEventListener("mousemove", (e) => {
-    mx = e.clientX;
-    my = e.clientY;
+  document.addEventListener("mousemove", (event) => {
+    mx = event.clientX;
+    my = event.clientY;
     if (!visible) {
       visible = true;
-      animate(blob, { opacity: [0, 1] }, { duration: 0.6 });
+      blob.style.opacity = "1";
+      dot.style.opacity = "1";
     }
   });
 
   document.addEventListener("mouseleave", () => {
     visible = false;
-    animate(blob, { opacity: 0 }, { duration: 0.5 });
+    blob.style.opacity = "0";
+    dot.style.opacity = "0";
   });
 
-  // Blob grows on interactive elements
-  qq("a, button, .value-card, .price-card, .room-grid article").forEach((el) => {
+  qq("a, button, .value-card, .price-card, .room-grid article, .family-grid article, input, textarea, select").forEach((el) => {
     el.addEventListener("mouseenter", () => {
-      animate(blob, { scale: 2.8, opacity: 0.22 }, {
-        duration: 0.5,
-        easing: spring({ stiffness: 250, damping: 22 }),
-      });
+      hover = true;
+      blob.style.width = "58px";
+      blob.style.height = "58px";
+      dot.style.opacity = "0.45";
     });
     el.addEventListener("mouseleave", () => {
-      animate(blob, { scale: 1, opacity: 0.14 }, {
-        duration: 0.5,
-        easing: spring({ stiffness: 250, damping: 22 }),
-      });
+      hover = false;
+      blob.style.width = "34px";
+      blob.style.height = "34px";
+      dot.style.opacity = visible ? "1" : "0";
     });
   });
 
-  // Smooth RAF follow loop
-  function blobLoop() {
-    bx += (mx - bx) * 0.09;
-    by += (my - by) * 0.09;
-    blob.style.left = bx - 30 + "px";
-    blob.style.top  = by - 30 + "px";
-    requestAnimationFrame(blobLoop);
+  function cursorLoop() {
+    bx += (mx - bx) * 0.16;
+    by += (my - by) * 0.16;
+    const radius = (hover ? 58 : 34) / 2;
+    blob.style.transform = `translate3d(${bx - radius}px, ${by - radius}px, 0)`;
+    dot.style.transform = `translate3d(${mx - 3}px, ${my - 3}px, 0)`;
+    requestAnimationFrame(cursorLoop);
   }
-  blobLoop();
+
+  cursorLoop();
 }
 
-// ============================================================
-// 14. FLOATING PARTICLES — Hero warmth
-// ============================================================
 const heroSection = q(".hero");
-if (heroSection) {
+if (heroSection && !reduceMotion) {
   const wrap = document.createElement("div");
   wrap.className = "hero-particles";
   heroSection.appendChild(wrap);
 
-  const colors = [
-    "var(--teal)",
-    "var(--mint)",
-    "var(--gold)",
-    "rgba(0,167,168,0.6)",
-  ];
+  const colors = ["var(--teal)", "var(--mint)", "var(--gold)"];
 
-  for (let i = 0; i < 16; i++) {
-    const p = document.createElement("div");
-    p.className = "particle";
-    const size = Math.random() * 8 + 3;
-    p.style.cssText = `
+  for (let i = 0; i < 9; i += 1) {
+    const particle = document.createElement("div");
+    const size = Math.random() * 6 + 3;
+    particle.className = "particle";
+    particle.style.cssText = `
       width: ${size}px;
       height: ${size}px;
-      left: ${Math.random() * 95}%;
-      bottom: ${Math.random() * 50 + 5}%;
+      left: ${Math.random() * 92 + 4}%;
+      bottom: ${Math.random() * 48 + 6}%;
       animation-delay: ${Math.random() * 10}s;
-      animation-duration: ${Math.random() * 12 + 10}s;
-      opacity: ${Math.random() * 0.28 + 0.05};
+      animation-duration: ${Math.random() * 14 + 14}s;
+      opacity: ${Math.random() * 0.16 + 0.04};
       background: ${colors[Math.floor(Math.random() * colors.length)]};
     `;
-    wrap.appendChild(p);
+    wrap.appendChild(particle);
   }
 }
