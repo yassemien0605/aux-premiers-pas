@@ -235,29 +235,3 @@ if (!isMobile && !reduceMotion) {
 
   cursorLoop();
 }
-
-const heroSection = q(".hero");
-if (heroSection && !reduceMotion) {
-  const wrap = document.createElement("div");
-  wrap.className = "hero-particles";
-  heroSection.appendChild(wrap);
-
-  const colors = ["var(--teal)", "var(--mint)", "var(--gold)"];
-
-  for (let i = 0; i < 9; i += 1) {
-    const particle = document.createElement("div");
-    const size = Math.random() * 6 + 3;
-    particle.className = "particle";
-    particle.style.cssText = `
-      width: ${size}px;
-      height: ${size}px;
-      left: ${Math.random() * 92 + 4}%;
-      bottom: ${Math.random() * 48 + 6}%;
-      animation-delay: ${Math.random() * 10}s;
-      animation-duration: ${Math.random() * 14 + 14}s;
-      opacity: ${Math.random() * 0.16 + 0.04};
-      background: ${colors[Math.floor(Math.random() * colors.length)]};
-    `;
-    wrap.appendChild(particle);
-  }
-}
